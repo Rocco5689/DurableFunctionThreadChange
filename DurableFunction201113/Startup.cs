@@ -2,7 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.IO;
 
 [assembly: FunctionsStartup(typeof(DurableFunction201113.Startup))]
 
@@ -10,6 +12,16 @@ namespace DurableFunction201113
 {
     public class Startup : FunctionsStartup
     {
+        public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
+        {
+            FunctionsHostBuilderContext context = builder.GetContext();
+
+            builder.ConfigurationBuilder
+                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
+                .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false)
+                .AddEnvironmentVariables();
+        }
+
         public override void Configure(IFunctionsHostBuilder builder)
         {
             try
@@ -27,7 +39,7 @@ namespace DurableFunction201113
                 throw;
             }
 
-            //builder.Services.AddSingleton<IMyLoggerProvider, MyLoggerProvider>();
+            builder.Services.AddSingleton<IMyLoggerProvider, MyLoggerProvider>();
         }
 
         private IServiceCollection ConfigureServices(IServiceCollection services)
