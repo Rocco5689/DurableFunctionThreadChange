@@ -7,6 +7,8 @@
     },
     "logLevel": {
       "default": "Information",
+      "DurableTask.AzureStorage": "Information",
+      "DurableTask.Core": "Information",
       "Host.Results": "Trace",
       "Function": "Trace",
       "Host.Aggregator": "Trace"
@@ -20,7 +22,12 @@
   },
   "extensions": {
     "durableTask": {
-      "hubName": "TaskHub20201216"
+      "hubName": "TaskHub2021013102",
+      "logReplayEvent": true,
+      "tracing": {
+        "traceInputsAndOutputs": true,
+        "traceReplayEvents": true
+      }
     }
   }
 }

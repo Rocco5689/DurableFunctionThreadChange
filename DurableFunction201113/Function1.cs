@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DurableFunction201113
 {
-    public class Function1
+    public partial class Function1
     {
         private readonly ILogger logger;
         private readonly IMyLoggerProvider _otherClass;
@@ -68,6 +68,8 @@ namespace DurableFunction201113
         [FunctionName("Function1_Hello")]
         public string SayHello([ActivityTrigger] string name, ILogger log, Microsoft.Azure.WebJobs.ExecutionContext context)
         {
+            logger.LogInformation("Before SayHello Method!!!" + " ManagedThreadID: " + Thread.CurrentThread.ManagedThreadId);
+
             logger.LogInformation("SayHello beginning " + " " + context.InvocationId);
 
             log.LogInformation($"Saying hello to {name}.");
@@ -82,6 +84,7 @@ namespace DurableFunction201113
         {
             // Function input comes from the request content.
             log.LogInformation($"StartNewAsync method called!!!");
+            logger.LogInformation("Calling starter.StartNewAsync Method!!!" + " ManagedThreadID: " + Thread.CurrentThread.ManagedThreadId);
             string instanceId = await starter.StartNewAsync("Function1", null);
 
             logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
